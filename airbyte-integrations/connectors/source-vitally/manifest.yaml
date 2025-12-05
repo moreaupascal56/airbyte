@@ -24,6 +24,7 @@ definitions:
           http_method: GET
           request_parameters:
             status: "{{ config['status'] }}"
+            sortBy: "{{ config['incremental_cursor_field'] }}"
         record_selector:
           type: RecordSelector
           extractor:
@@ -46,6 +47,15 @@ definitions:
             cursor_value: "{{ response.next }}"
         decoder:
           type: JsonDecoder
+      incremental_sync:
+        type: DatetimeBasedCursor
+        cursor_field: "{{ config['incremental_cursor_field'] }}"
+        start_datetime:
+          type: MinMaxDatetime
+          datetime: "1970-01-01T00:00:00.000Z"
+        datetime_format: "%Y-%m-%dT%H:%M:%S.%fZ"
+        is_data_feed: true
+        lookback_window: PT1H      
       schema_loader:
         type: InlineSchemaLoader
         schema:
@@ -61,6 +71,8 @@ definitions:
           $ref: "#/definitions/base_requester"
           path: /admins
           http_method: GET
+          request_parameters:
+            sortBy: "{{ config['incremental_cursor_field'] }}"
         record_selector:
           type: RecordSelector
           extractor:
@@ -83,6 +95,15 @@ definitions:
             cursor_value: "{{ response.next }}"
         decoder:
           type: JsonDecoder
+      incremental_sync:
+        type: DatetimeBasedCursor
+        cursor_field: "{{ config['incremental_cursor_field'] }}"
+        start_datetime:
+          type: MinMaxDatetime
+          datetime: "1970-01-01T00:00:00.000Z"
+        datetime_format: "%Y-%m-%dT%H:%M:%S.%fZ"
+        is_data_feed: true
+        lookback_window: PT1H
       schema_loader:
         type: InlineSchemaLoader
         schema:
@@ -98,6 +119,8 @@ definitions:
           $ref: "#/definitions/base_requester"
           path: /conversations
           http_method: GET
+          request_parameters:
+            sortBy: "{{ config['incremental_cursor_field'] }}"
         record_selector:
           type: RecordSelector
           extractor:
@@ -120,6 +143,15 @@ definitions:
             cursor_value: "{{ response.next }}"
         decoder:
           type: JsonDecoder
+      incremental_sync:
+        type: DatetimeBasedCursor
+        cursor_field: "{{ config['incremental_cursor_field'] }}"
+        start_datetime:
+          type: MinMaxDatetime
+          datetime: "1970-01-01T00:00:00.000Z"
+        datetime_format: "%Y-%m-%dT%H:%M:%S.%fZ"
+        is_data_feed: true
+        lookback_window: PT1H
       schema_loader:
         type: InlineSchemaLoader
         schema:
@@ -135,6 +167,8 @@ definitions:
           $ref: "#/definitions/base_requester"
           path: /notes
           http_method: GET
+          request_parameters:
+            sortBy: "{{ config['incremental_cursor_field'] }}"
         record_selector:
           type: RecordSelector
           extractor:
@@ -157,6 +191,15 @@ definitions:
             cursor_value: "{{ response.next }}"
         decoder:
           type: JsonDecoder
+      incremental_sync:
+        type: DatetimeBasedCursor
+        cursor_field: "{{ config['incremental_cursor_field'] }}"
+        start_datetime:
+          type: MinMaxDatetime
+          datetime: "1970-01-01T00:00:00.000Z"
+        datetime_format: "%Y-%m-%dT%H:%M:%S.%fZ"
+        is_data_feed: true
+        lookback_window: PT1H
       schema_loader:
         type: InlineSchemaLoader
         schema:
@@ -172,6 +215,8 @@ definitions:
           $ref: "#/definitions/base_requester"
           path: /tasks
           http_method: GET
+          request_parameters:
+            sortBy: "{{ config['incremental_cursor_field'] }}"
         record_selector:
           type: RecordSelector
           extractor:
@@ -194,6 +239,15 @@ definitions:
             cursor_value: "{{ response.next }}"
         decoder:
           type: JsonDecoder
+      incremental_sync:
+        type: DatetimeBasedCursor
+        cursor_field: "{{ config['incremental_cursor_field'] }}"
+        start_datetime:
+          type: MinMaxDatetime
+          datetime: "1970-01-01T00:00:00.000Z"
+        datetime_format: "%Y-%m-%dT%H:%M:%S.%fZ"
+        is_data_feed: true
+        lookback_window: PT1H
       schema_loader:
         type: InlineSchemaLoader
         schema:
@@ -209,6 +263,8 @@ definitions:
           $ref: "#/definitions/base_requester"
           path: /users
           http_method: GET
+          request_parameters:
+            sortBy: "{{ config['incremental_cursor_field'] }}"
         record_selector:
           type: RecordSelector
           extractor:
@@ -231,6 +287,15 @@ definitions:
             cursor_value: "{{ response.next }}"
         decoder:
           type: JsonDecoder
+      incremental_sync:
+        type: DatetimeBasedCursor
+        cursor_field: "{{ config['incremental_cursor_field'] }}"
+        start_datetime:
+          type: MinMaxDatetime
+          datetime: "1970-01-01T00:00:00.000Z"
+        datetime_format: "%Y-%m-%dT%H:%M:%S.%fZ"
+        is_data_feed: true
+        lookback_window: PT1H
       schema_loader:
         type: InlineSchemaLoader
         schema:
@@ -262,6 +327,7 @@ spec:
       - domain
       - status
       - secret_token
+      - incremental_cursor_field
     properties:
       domain:
         type: string
@@ -294,6 +360,17 @@ spec:
         title: Basic Auth Header
         always_show: true
         airbyte_secret: true
+      incremental_cursor_field:
+        type: string
+        description: >-
+          The cursor field used for incremental sync. One of the following values:
+          updatedAt, createdAt.
+        title: Incremental Cursor Field
+        enum:
+          - updatedAt
+          - createdAt
+        default: updatedAt
+        order: 4
     additionalProperties: true
 
 metadata:
